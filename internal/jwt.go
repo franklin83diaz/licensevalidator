@@ -12,9 +12,9 @@ import (
 //
 // [claimsData] is a structure that implements one of the following:
 // ServerRequest
-func CreateJWT(internalFileKey string, claimsData interface{}) (string, error) {
+func CreateJWT(internalFile string, claimsData interface{}) (string, error) {
 	// Read the private key
-	privateKeyData, err := ReadInternalfile(internalFileKey)
+	privateKeyData, err := ReadInternalfile(internalFile)
 	if err != nil {
 		return "", fmt.Errorf("error reading the private key: %v", err)
 	}
@@ -50,4 +50,39 @@ func CreateJWT(internalFileKey string, claimsData interface{}) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+// CheckJWT verifies a JWT token
+// receives the name internal file key key and the token string
+// returns the claims if the token is valid
+func CheckJWT(internalFile string, tokenString string) (jwt.MapClaims, error) {
+	// Read the public key
+	publicKeyData, err := ReadInternalfile(internalFile)
+	if err != nil {
+		return nil, fmt.Errorf("error reading the public key: %v", err)
+	}
+
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(publicKeyData))
+	if err != nil {
+		return nil, fmt.Errorf("error parsing the public key: %v", err)
+	}
+
+	// check the token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		//using RS256
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return publicKey, nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("error parsing the token: %v", err)
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, fmt.Errorf("error: token is not valid")
 }
