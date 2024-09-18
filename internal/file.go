@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"embed"
 	"os"
 )
 
@@ -10,6 +11,27 @@ import (
 func FileExists(pathLicenseFile string) bool {
 	_, err := os.Stat(pathLicenseFile)
 	return os.IsNotExist(err)
+}
+
+//go:embed secret/*
+var secretFiles embed.FS
+
+func ReadInternalfile(fileName string) (string, error) {
+	fs, err := secretFiles.Open("secret/")
+	if err != nil {
+		return "", err
+	}
+	defer fs.Close()
+
+	// Read the file
+	buffer := make([]byte, 1024)
+	_, err = fs.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	return string(buffer), nil
+
 }
 
 // Read file reads a file and returns its content
