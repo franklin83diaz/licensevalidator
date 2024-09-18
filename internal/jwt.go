@@ -8,13 +8,13 @@ import (
 )
 
 // CreateJWT creates a JWT token
-// receives the path to the private key and the [claimsData]
+// receives the name internal file key key and the [claimsData]
 //
 // [claimsData] is a structure that implements one of the following:
 // ServerRequest
-func CreateJWT(privateKeyPath string, claimsData interface{}) (string, error) {
+func CreateJWT(internalFileKey string, claimsData interface{}) (string, error) {
 	// Read the private key
-	privateKeyData, err := ReadFile(privateKeyPath)
+	privateKeyData, err := ReadInternalfile(internalFileKey)
 	if err != nil {
 		return "", fmt.Errorf("error reading the private key: %v", err)
 	}
