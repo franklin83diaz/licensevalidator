@@ -21,7 +21,7 @@ func main() {
 
 	fmt.Println("Protected ID:", protectedId)
 
-	ok, err := licensevalidator.Validate(*licenseServer, *serialNumber)
+	ok, err := licensevalidator.Validate(*licenseServer, *serialNumber, "app.lic")
 	if err != nil {
 		log.Fatal(err)
 	}
