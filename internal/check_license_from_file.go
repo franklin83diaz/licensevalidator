@@ -19,6 +19,8 @@ func CheckLicenseFromFile(protectedId string, pathLicenseFile string) (bool, err
 		return false, err
 	}
 
+	//TODO: Implement the logic to check the license from the file
+
 	return true, nil
 
 }
