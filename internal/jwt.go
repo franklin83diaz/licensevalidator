@@ -8,16 +8,11 @@ import (
 )
 
 // CreateJWT creates a JWT token
-// receives the name internal file key key and the [claimsData]
+// receives the string private key and the [claimsData]
 //
 // [claimsData] is a structure that implements one of the following:
 // ServerRequest
-func CreateJWT(internalFile string, claimsData interface{}) (string, error) {
-	// Read the private key
-	privateKeyData, err := ReadInternalfile(internalFile)
-	if err != nil {
-		return "", fmt.Errorf("error reading the private key: %v", err)
-	}
+func CreateJWT(privateKeyData string, claimsData interface{}) (string, error) {
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKeyData))
 	if err != nil {
@@ -53,14 +48,9 @@ func CreateJWT(internalFile string, claimsData interface{}) (string, error) {
 }
 
 // CheckJWT verifies a JWT token
-// receives the name internal file key key and the token string
+// receives the string public key and the token string
 // returns the claims if the token is valid
-func CheckJWT(internalFile string, tokenString string) (jwt.MapClaims, error) {
-	// Read the public key
-	publicKeyData, err := ReadInternalfile(internalFile)
-	if err != nil {
-		return nil, fmt.Errorf("error reading the public key: %v", err)
-	}
+func CheckJWT(publicKeyData string, tokenString string) (jwt.MapClaims, error) {
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(publicKeyData))
 	if err != nil {
