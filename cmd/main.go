@@ -18,10 +18,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	//Just to show the protected ID, normally just used internally
 	fmt.Println("Protected ID:", protectedId)
 
-	ok, err := licensevalidator.Validate(*licenseServer, *serialNumber, "app.lic")
+	ok, err := licensevalidator.Validate(*licenseServer, *serialNumber, "myapp", "app.lic", "pubkey.pem", "privkey.pem")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-func CheckLicenseFromFile(protectedId string, pathLicenseFile string) (bool, error) {
+func CheckLicenseFromFile(protectedId string, pathLicenseFile string, ServerPubKey string) (bool, error) {
 	// Open the file
 	file, err := os.Open(pathLicenseFile)
 	if err != nil {

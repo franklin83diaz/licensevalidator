@@ -5,7 +5,17 @@ import (
 	"licensevalidator/internal"
 )
 
-func Validate(server string, serial string, pathLicenseFile string) (licOk bool, err error) {
+// Validate validates the license
+// receives:
+// the server address,
+// the serial number,
+// the app name,
+// the path to the license file,
+// the public key and the private key
+// returns:
+// a boolean indicating if the license is valid
+// an error if the validation fails
+func Validate(server string, serial string, appNAme string, pathLicenseFile string, ServerPubKey string, AppPrivKey string) (licOk bool, err error) {
 
 	//Validate pathLicenseFile
 	if pathLicenseFile == "" {
@@ -30,7 +40,7 @@ func Validate(server string, serial string, pathLicenseFile string) (licOk bool,
 
 	//file exists
 	if internal.FileExists(pathLicenseFile) {
-		licOk, err = internal.CheckLicenseFromFile(protectedId, pathLicenseFile)
+		licOk, err = internal.CheckLicenseFromFile(protectedId, pathLicenseFile, ServerPubKey)
 	}
 
 	// If the license is not valid or the file does not exist, proccess to validate from the server
