@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"licensevalidator/entities"
+	"licensevalidator/internal/entities"
 
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -33,7 +33,7 @@ func CreateJWT(privateKeyData string, claimsData interface{}) (string, error) {
 	// claims
 	claims := jwt.MapClaims{
 		"SerialNumber": claimsDataImp.GetSerialNumber(),
-		"protectedId":  claimsDataImp.GetProtectedID(),
+		"protectedId":  claimsDataImp.GetProtectedId(),
 		"exp":          time.Now().Add(time.Hour * 24).Unix(),
 	}
 

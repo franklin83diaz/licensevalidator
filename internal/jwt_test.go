@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"licensevalidator/entities"
+	"licensevalidator/internal/entities"
 	"reflect"
 	"testing"
 )
