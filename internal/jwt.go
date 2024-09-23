@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"licensevalidator/entities"
+
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -31,7 +33,7 @@ func CreateJWT(privateKeyData string, claimsData interface{}) (string, error) {
 	// claims
 	claims := jwt.MapClaims{
 		"SerialNumber": claimsDataImp.GetSerialNumber(),
-		"protectedID":  claimsDataImp.GetProtectedID(),
+		"protectedId":  claimsDataImp.GetProtectedID(),
 		"exp":          time.Now().Add(time.Hour * 24).Unix(),
 	}
 
@@ -50,11 +52,11 @@ func CreateJWT(privateKeyData string, claimsData interface{}) (string, error) {
 // CheckJWT verifies a JWT token
 // receives the string public key and the token string
 // returns the claims if the token is valid
-func CheckJWT(publicKeyData string, tokenString string) (jwt.MapClaims, error) {
+func CheckJWT(publicKeyData string, tokenString string) (lic entities.License, err error) {
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte(publicKeyData))
 	if err != nil {
-		return nil, fmt.Errorf("error parsing the public key: %v", err)
+		return lic, fmt.Errorf("error parsing the public key: %v", err)
 	}
 
 	// check the token
@@ -67,12 +69,20 @@ func CheckJWT(publicKeyData string, tokenString string) (jwt.MapClaims, error) {
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("error parsing the token: %v", err)
+		return lic, fmt.Errorf("error parsing the token: %v", err)
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return claims, nil
+	var claims jwt.MapClaims
+	var ok bool
+	if claims, ok = token.Claims.(jwt.MapClaims); !ok || !token.Valid {
+		return lic, fmt.Errorf("error: token is not valid")
 	}
 
-	return nil, fmt.Errorf("error: token is not valid")
+	lic = entities.License{
+		Sub:         int64(claims["sub"].(float64)),
+		ProtectedID: claims["protectedId"].(string),
+		Iat:         int64(claims["iat"].(float64)),
+	}
+
+	return lic, nil
 }

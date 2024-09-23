@@ -1,10 +1,9 @@
 package internal
 
 import (
+	"licensevalidator/entities"
 	"reflect"
 	"testing"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func TestCreateJWT(t *testing.T) {
@@ -35,7 +34,7 @@ func TestCreateJWT(t *testing.T) {
 }
 
 func TestCheckJWT(t *testing.T) {
-	token := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHJvdGVjdGVkSWQiOiJYMTIzIiwiaWF0IjoxNTE2MjM5MDIyfQ.SABagqyys2MhgvIUjybOyFkH2XBu-9HxGSDgRgkg3LmDXj94Yn1Eu5q1J-_NwYihEKf8obopNINCp2mtFx4myE6ZXWl6H7gOOjO0Z3D8rb1ngKjQpRt-z36KvaL3twVMGUAHzSBFdZZhQgjPKn004BRyMP83-tRf_NpZRYdwUuTETi7RZFDLgMOKJaLhequO_Dd3my_G59JaYb9eGPnpzPZIKNuYs0O3utYFHd6EfZVzTSXY-wav7IfIIxeKUe693XL8r2M0SKeH9lj1xpTXeZuzIPdGy5rtZYAWuYA3LiDFeIBipB49kLNo2o68eQcROPc5yfDG7X__3k7NHkcRsA`
+	token := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyMzQ1Njc4OTAsInByb3RlY3RlZElkIjoiWDEyMyIsImlhdCI6MTUxNjIzOTAyMn0.E47UqLfFISTHkRAqEYd0DPUHNmH0XQY2bkMJVTvoWJkOLwi65CA5ybuCYGJJFiKA_X2LMdscQ4EiM8jlO1zExksWWTWgRu6rNtpM1XSqIpGUbA8t2yzxB88NDb65VTpOFlUN4jZjwHJqCbZ8nj0QvCv_Gyb1ECebsONpTP7bJKn-iIC_nvoBMMYdz8Caxs8cSuqlSKs6_Ozpf9N52fJ4m1DX6DqVt_Q842NOcub223bFjKwtuh2_xsMQhNJ81GUori33O6kFlnSAe5WBSW3ZtWWH0m2F_SEZZSKkpJw5GktZ0rkImXjpMdAoZcpqU1PnL51-J7DIDM_e0c67_wH4Ww`
 	publicKey := `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu1SU1LfVLPHCozMxH2Mo
 4lgOEePzNm0tRgeLezV6ffAt0gunVTLw7onLRnrq0/IzW7yWR7QkrmBL7jTKEn5u
@@ -46,38 +45,38 @@ cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
 mwIDAQAB
 -----END PUBLIC KEY-----`
 	type args struct {
-		internalFile string
-		tokenString  string
+		publicKey   string
+		tokenString string
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    jwt.MapClaims
+		want    entities.License
 		wantErr bool
 	}{
-		{"Test 1", args{publicKey, token}, jwt.MapClaims{
-			"sub":         "1234567890",
-			"protectedId": "X123",
-			"iat":         1516239022,
+		{"Test 1", args{publicKey, token}, entities.License{
+			Sub:         int64(1234567890),
+			ProtectedID: "X123",
+			Iat:         int64(1516239022),
 		}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CheckJWT(tt.args.internalFile, tt.args.tokenString)
+			got, err := CheckJWT(tt.args.publicKey, tt.args.tokenString)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CheckJWT() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got["sub"], tt.want["sub"]) {
-				t.Errorf("CheckJWT() = %v, want %v", got["sub"], tt.want["sub"])
+			if !reflect.DeepEqual(got.Sub, tt.want.Sub) {
+				t.Errorf("CheckJWT() = %v, want %v", got.Sub, tt.want.Sub)
 			}
-			if !reflect.DeepEqual(got["protectedId"], tt.want["protectedId"]) {
-				t.Errorf("CheckJWT() = %v, want %v", got["protectedId"], tt.want["protectedId"])
+			if !reflect.DeepEqual(got.ProtectedID, tt.want.ProtectedID) {
+				t.Errorf("CheckJWT() = %v, want %v", got.ProtectedID, tt.want.ProtectedID)
 			}
-			//DOTO: Fix this test
-			// if !reflect.DeepEqual(got["iat"], tt.want["iat"]) {
-			// 	t.Errorf("CheckJWT() = %v, want %v", got["iat"], tt.want["iat"])
-			// }
+
+			if !reflect.DeepEqual(got.Iat, tt.want.Iat) {
+				t.Errorf("CheckJWT() = %v, want %v", got.Iat, tt.want.Iat)
+			}
 		})
 	}
 }
