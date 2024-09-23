@@ -10,31 +10,22 @@ import (
 )
 
 // CreateJWT creates a JWT token
-// receives the string private key and the [claimsData]
+// receives the string private key and the [dtoSr]
 //
-// [claimsData] is a structure that implements one of the following:
-// ServerRequest
-func CreateJWT(privateKeyData string, claimsData interface{}) (string, error) {
+// [dtoSr] is a structure Data Transfer Object that implements the ServerRequest interface
+func CreateJWT(privateKeyData string, serialNumber string, protectedId string) (string, error) {
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKeyData))
 	if err != nil {
 		return "", fmt.Errorf("error parsing the private key: %v", err)
 	}
 
-	// Implement the ServerRequest interface
-	claimsDataImp, ok := claimsData.(ServerRequest)
-	if !ok {
-		//TODO: Implement other interfaces
-
-		//For now, return an error
-		return "", fmt.Errorf("error: claimsData does not implement any of the interfaces")
-	}
-
 	// claims
 	claims := jwt.MapClaims{
-		"SerialNumber": claimsDataImp.GetSerialNumber(),
-		"protectedId":  claimsDataImp.GetProtectedId(),
-		"exp":          time.Now().Add(time.Hour * 24).Unix(),
+		"SerialNumber": serialNumber,
+		"protectedId":  protectedId,
+		//This is the expiration time for the token
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	// create the token

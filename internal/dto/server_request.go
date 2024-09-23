@@ -1,4 +1,4 @@
-package internal
+package dto
 
 type ServerRequest interface {
 	GetSerialNumber() string
