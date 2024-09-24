@@ -38,6 +38,8 @@ func SeverHttp() {
 		if protectedID == "1501d9052e005977a3a1281f8f4a689681f82da09229005889e0fcc5cf365e57" && serialNumber == "X1d23" {
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("License is valid"))
+
+			return
 		}
 
 		w.WriteHeader(http.StatusUnauthorized)
