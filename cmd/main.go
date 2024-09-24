@@ -4,14 +4,21 @@ import (
 	"flag"
 	"fmt"
 	"licensevalidator"
+	"licensevalidator/test"
 	"log"
+	"time"
 )
 
 func main() {
 
+	go func() {
+		test.SeverHttp()
+	}()
+	time.Sleep(1 * time.Second)
+
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	licenseServer := flag.String("server", "127.0.0.1", "License server address")
+	licenseServer := flag.String("server", "http://127.0.0.1:8080", "License server address")
 	serialNumber := flag.String("serial", "", "Serial number")
 	filepath := flag.String("license", "", "Path to the license file")
 

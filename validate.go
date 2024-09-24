@@ -39,15 +39,14 @@ func Validate(server string, serial string, appNAme string, pathLicenseFile stri
 	}
 
 	//file exists
-	fileExists := internal.FileExists(pathLicenseFile)
-	if fileExists {
+	if internal.FileExists(pathLicenseFile) {
 		licOk, err = internal.CheckLicenseFromFile(protectedId, pathLicenseFile, ServerPubKey)
 	}
 
 	// If the license is not valid or the file does not exist, proccess to validate from the server
-	// if !licOk {
-	// 	licOk, err = internal.CheckLicenseFromServer(protectedId, server, serial)
-	// }
+	if !licOk {
+		licOk, err = internal.CheckLicenseFromServer(protectedId, server, serial)
+	}
 
 	return
 }
