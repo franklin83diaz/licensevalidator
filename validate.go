@@ -45,7 +45,7 @@ func Validate(server string, serial string, appNAme string, pathLicenseFile stri
 
 	// If the license is not valid or the file does not exist, proccess to validate from the server
 	if !licOk {
-		licOk, err = internal.CheckLicenseFromServer(protectedId, server, serial)
+		licOk, err = internal.CheckLicenseFromServer(protectedId, server, serial, AppPrivKey)
 	}
 
 	return

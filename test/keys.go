@@ -1,50 +1,6 @@
-package main
+package test
 
-import (
-	"flag"
-	"fmt"
-	"licensevalidator"
-	"licensevalidator/test"
-	"log"
-	"time"
-)
-
-// Run go run main.go --serial X1d23 --license example_app.lic1
-func main() {
-
-	go func() {
-		test.SeverHttp()
-	}()
-	time.Sleep(1 * time.Millisecond)
-
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	licenseServer := flag.String("server", "http://127.0.0.1:8080/", "License server address")
-	serialNumber := flag.String("serial", "", "Serial number")
-	filepath := flag.String("license", "", "Path to the license file")
-
-	flag.Parse()
-
-	protectedId, err := licensevalidator.GetId("myapp")
-	if err != nil {
-		log.Fatal(err)
-	}
-	//Just to show the protected ID, normally just used internally
-	fmt.Println("Protected ID:", protectedId)
-	appName := "myapp"
-	ok, err := licensevalidator.Validate(*licenseServer, *serialNumber, appName, *filepath, publicKey, privateKey)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if ok {
-		fmt.Println("License is valid")
-	} else {
-		fmt.Println("License is not valid")
-	}
-
-}
-
+// NOTE: The par of keys for server and app should be the different
 var privateKey = `-----BEGIN PRIVATE KEY-----
 MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
 MzEfYyjiWA4R4/M2bS1GB4t7NXp98C3SC6dVMvDuictGeurT8jNbvJZHtCSuYEvu
@@ -74,6 +30,7 @@ TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
 dn/RsYEONbwQSjIfMPkvxF+8HQ==
 -----END PRIVATE KEY-----`
 
+// NOTE: The par of keys for server and app should be the different
 var publicKey = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu1SU1LfVLPHCozMxH2Mo
 4lgOEePzNm0tRgeLezV6ffAt0gunVTLw7onLRnrq0/IzW7yWR7QkrmBL7jTKEn5u

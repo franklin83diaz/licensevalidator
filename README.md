@@ -7,12 +7,16 @@
 
 - [@Franklin Diaz](mailto:fdiaz@adaptiveomputing.com)
 
-
 ## Acknowledgements
 
 - [JWT.io](https://jwt.io) For providing an invaluable tool for decoding, verifying, and generating JSON Web Tokens, which was crucial for our project's authentication and authorization processes.
 
 - [Public-key cryptography (Wikipedia)](https://en.wikipedia.org/wiki/Public-key_cryptography) For the comprehensive information on public-key cryptography, which enhanced our understanding and implementation of secure communication protocols in our project.
+
+## example cli
+`
+go run main.go --serial X1d23 --license example_app.lic1
+`
 
 ## Explanation of Operation
 
