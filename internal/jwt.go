@@ -22,8 +22,8 @@ func CreateJWT(privateKeyData string, serialNumber string, protectedId string) (
 
 	// claims
 	claims := jwt.MapClaims{
-		"SerialNumber": serialNumber,
-		"protectedId":  protectedId,
+		"serialNumber": serialNumber,
+		"sub":          protectedId,
 		//This is the expiration time for the token
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	}
@@ -69,10 +69,26 @@ func CheckJWT(publicKeyData string, tokenString string) (lic entities.License, e
 		return lic, fmt.Errorf("error: token is not valid")
 	}
 
+	// Get values from the token
+	protectedID, ok := claims["sub"].(string)
+	if !ok {
+		return lic, fmt.Errorf("error: protected id not found")
+	}
+
+	iat, ok := claims["iat"].(float64)
+	if !ok {
+		return lic, fmt.Errorf("error: iat not found")
+	}
+
+	exp, ok := (claims["exp"].(float64))
+	if !ok {
+		return lic, fmt.Errorf("error: exp not found")
+	}
+
 	lic = entities.License{
-		Sub:         int64(claims["sub"].(float64)),
-		ProtectedID: claims["protectedId"].(string),
-		Iat:         int64(claims["iat"].(float64)),
+		ProtectedID: protectedID,
+		Iat:         int64(iat),
+		Exp:         int64(exp),
 	}
 
 	return lic, nil

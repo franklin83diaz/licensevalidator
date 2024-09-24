@@ -68,7 +68,7 @@ dn/RsYEONbwQSjIfMPkvxF+8HQ==
 }
 
 func TestCheckJWT(t *testing.T) {
-	token := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyMzQ1Njc4OTAsInByb3RlY3RlZElkIjoiWDEyMyIsImlhdCI6MTUxNjIzOTAyMn0.E47UqLfFISTHkRAqEYd0DPUHNmH0XQY2bkMJVTvoWJkOLwi65CA5ybuCYGJJFiKA_X2LMdscQ4EiM8jlO1zExksWWTWgRu6rNtpM1XSqIpGUbA8t2yzxB88NDb65VTpOFlUN4jZjwHJqCbZ8nj0QvCv_Gyb1ECebsONpTP7bJKn-iIC_nvoBMMYdz8Caxs8cSuqlSKs6_Ozpf9N52fJ4m1DX6DqVt_Q842NOcub223bFjKwtuh2_xsMQhNJ81GUori33O6kFlnSAe5WBSW3ZtWWH0m2F_SEZZSKkpJw5GktZ0rkImXjpMdAoZcpqU1PnL51-J7DIDM_e0c67_wH4Ww`
+	token := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNTAxZDkwNTJlMDA1OTc3YTNhMTI4MWY4ZjRhNjg5NjgxZjgyZGEwOTIyOTAwNTg4OWUwZmNjNWNmMzY1ZTU3IiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5MTYyMzkwMjJ9.ZFRLTiOH-Ndl3U5tk6SLsOkgotv6MLw_z8J7VaJfGMqvotLC4YlG52dAizySDhhPmTsMWi_G8w8HM7fp8IjUQHCOy3EihcmXumJp06Y0k7LgqjJFLDR3S8Pmt0hOTmGB3AnNyyKHpw8g2P7w9-IjiuffuIzP2JSn-nmc_mq8q8qpaD-M5szTpPmKyvDWq1oek1ivFpHLgLDM4Oci5YxSZkan8sERZsMEPnCELq3DAub5t6-MZLWxEaTmZQtR-nQUzDh15afe5CLRFw4jhPkI8DwHGHBew_3fVVJGMziUTyeAxrS08AkhSVfsWsWlbKz4j8lu2P-hhSByonBma1unEw`
 	publicKey := `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu1SU1LfVLPHCozMxH2Mo
 4lgOEePzNm0tRgeLezV6ffAt0gunVTLw7onLRnrq0/IzW7yWR7QkrmBL7jTKEn5u
@@ -89,8 +89,7 @@ mwIDAQAB
 		wantErr bool
 	}{
 		{"Check JWT Test 1", args{publicKey, token}, entities.License{
-			Sub:         int64(1234567890),
-			ProtectedID: "X123",
+			ProtectedID: "1501d9052e005977a3a1281f8f4a689681f82da09229005889e0fcc5cf365e57",
 			Iat:         int64(1516239022),
 		}, false},
 	}
@@ -101,9 +100,7 @@ mwIDAQAB
 				t.Errorf("CheckJWT() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got.Sub, tt.want.Sub) {
-				t.Errorf("CheckJWT() = %v, want %v", got.Sub, tt.want.Sub)
-			}
+
 			if !reflect.DeepEqual(got.ProtectedID, tt.want.ProtectedID) {
 				t.Errorf("CheckJWT() = %v, want %v", got.ProtectedID, tt.want.ProtectedID)
 			}

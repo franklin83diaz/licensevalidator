@@ -23,7 +23,7 @@ mwIDAQAB
 		want    bool
 		wantErr bool
 	}{
-		{"Test 1", args{"X123", "../cmd/example_app.lic", publicKey}, true, false},
+		{"Test 1", args{"1501d9052e005977a3a1281f8f4a689681f82da09229005889e0fcc5cf365e57", "../cmd/example_app.lic", publicKey}, true, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
