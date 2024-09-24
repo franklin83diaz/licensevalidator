@@ -9,7 +9,7 @@ import (
 // returns a true if the file exists
 func FileExists(pathLicenseFile string) bool {
 	_, err := os.Stat(pathLicenseFile)
-	return os.IsNotExist(err)
+	return !os.IsNotExist(err)
 }
 
 // Read file reads a file and returns its content
